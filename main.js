@@ -1,18 +1,4 @@
 'use strict';
-//
-// (function () {
-//     // return {
-//     //     formOnSubmit: function(e) {
-//     //         e.preventDefault();
-//     //         var handleFormCallback = function(response) {
-//     //             console.log('form clicked', JSON.parse(response)[0]);
-//     //         };
-//     //
-//     //         var response = httpGetAsync('https://api.github.com/users/helfi92/followers', handleFormCallback);
-//     //     }
-//     // };
-// }());
-
 
 window.onload = function(event) {
     function httpGetAsync(theUrl, callback) {
@@ -33,12 +19,30 @@ window.onload = function(event) {
     function setupGithubForm() {
         var form = document.getElementById('github-form');
         var handleFormCallback = function (response) {
-            console.log('form clicked', JSON.parse(response)[0]);
+            // response = JSON.parse(response);
+            var degree = form.elements[1].value;
+            var promises = [];
+
+            while(degree) {
+                console.log('booom');
+                promises.push(fetch('https://api.github.com/users/helfi92/followers', {
+                    method: 'GET'
+                }));
+                degree -= 1;
+            }
+
+            Promise.all(promises).then(function (values) {
+                return values[0].json();
+            }).then(function(values){
+                console.log('values: ', values);
+            }, function (err) {
+                console.log('err: ', err);
+            });
         };
 
         form.onsubmit = function(e) {
             e.preventDefault();
-            httpGetAsync('https://api.github.com/users/' + e.target.elements[0].value + '/followers', handleFormCallback);
+            handleFormCallback();
         };
     }
 
