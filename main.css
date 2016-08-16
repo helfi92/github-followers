@@ -1,3 +1,9 @@
 body {
     background-color: #ddd;
 }
+
+#github-visualize {
+    overflow-y: auto;
+    max-height: 400px;
+    margin-top: 15px;
+}
